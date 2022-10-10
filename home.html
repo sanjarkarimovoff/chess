@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <title> Chess</title>
+  
+  
+  
+  
+<style>
+body {
+  font-family: "Open Sans", sans-serif;
+}
+h1{
+  text-align: center;
+}
+#cChessboard{
+  width: 400px;
+  margin: 0 auto;
+  
+}
+td{
+  user-select: none;
+}
+.chessboard{
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 35px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 2px solid #000;
+}
+.chessboard tr{
+  width: 100%;
+  height: 12.5%;
+  margin: 0;
+  padding: 0;
+}
+.chessboard td{
+  width: 12.5%;
+  height: 12.5%;
+  margin: 0;
+  text-align: center;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+#turn{
+  margin: 5px 0;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #000;
+}
+.turnBlack{
+  color: #fff;
+  background-color:#000;
+}
+.turnBlack:before{
+  content: "Black";
+}
+.turnWhite{
+  color: #000;
+  background-color:#fff;
+}
+.turnWhite:before{
+  content: "White";
+}
+.chessboard tr:nth-child(odd) td:nth-child(odd),.chessboard tr:nth-child(even) td:nth-child(even){
+  background-color: #425284;
+}
+.chessboard tr:nth-child(odd) td:nth-child(even),.chessboard tr:nth-child(even) td:nth-child(odd){
+  background-color:#5f72ae;
+}
+.available{
+  
+ 
+}
+.black{
+  color: #000;
+}
+.white{
+  color: #ccc;
+}
+.selected{
+  outline: 1px solid #fff;
+}
+.bishop:before{
+  content: '\265D';
+}
+.king:before{
+  content: '\265A';
+}
+.knight:before{
+  content: '\265E';
+}
+.pawn:before{
+  content: "\265F";
+}
+.queen:before{
+  content: '\265B';
+}
+.rook:before{
+  content: "\265C";
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <h1>chess</h1>
+  <div id="cChessboard">
+    <div id="turn"></div>
+   <table class="chessboard">
+     <tr id="l8">
+       <td id="18" name="a8" data-peca="" data-player=""></td>
+       <td id="28" name="b8" data-peca="" data-player=""></td>
+       <td id="38" name="c8" data-peca="" data-player=""></td>
+       <td id="48" name="d8" data-peca="" data-player=""></td>
+       <td id="58" name="e8" data-peca="" data-player=""></td>
+       <td id="68" name="f8" data-peca="" data-player=""></td>
+       <td id="78" name="g8" data-peca="" data-player=""></td>
+       <td id="88" name="h8" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l7">
+       <td id="17" name="a7" data-peca="" data-player=""></td>
+       <td id="27" name="b7" data-peca="" data-player=""></td>
+       <td id="37" name="c7" data-peca="" data-player=""></td>
+       <td id="47" name="d7" data-peca="" data-player=""></td>
+       <td id="57" name="e7" data-peca="" data-player=""></td>
+       <td id="67" name="f7" data-peca="" data-player=""></td>
+       <td id="77" name="g7" data-peca="" data-player=""></td>
+       <td id="87" name="h7" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l6">
+       <td id="16" name="a6" data-peca="" data-player=""></td>
+       <td id="26" name="b6" data-peca="" data-player=""></td>
+       <td id="36" name="c6" data-peca="" data-player=""></td>
+       <td id="46" name="d6" data-peca="" data-player=""></td>
+       <td id="56" name="e6" data-peca="" data-player=""></td>
+       <td id="66" name="f6" data-peca="" data-player=""></td>
+       <td id="76" name="g6" data-peca="" data-player=""></td>
+       <td id="86" name="h6" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l5">
+       <td id="15" name="a5" data-peca="" data-player=""></td>
+       <td id="25" name="b5" data-peca="" data-player=""></td>
+       <td id="35" name="c5" data-peca="" data-player=""></td>
+       <td id="45" name="d5" data-peca="" data-player=""></td>
+       <td id="55" name="e5" data-peca="" data-player=""></td>
+       <td id="65" name="f5" data-peca="" data-player=""></td>
+       <td id="75" name="g5" data-peca="" data-player=""></td>
+       <td id="85" name="h5" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l4">
+       <td id="14" name="a4" data-peca="" data-player=""></td>
+       <td id="24" name="b4" data-peca="" data-player=""></td>
+       <td id="34" name="c4" data-peca="" data-player=""></td>
+       <td id="44" name="d4" data-peca="" data-player=""></td>
+       <td id="54" name="e4" data-peca="" data-player=""></td> 
+       <td id="64" name="f4" data-peca="" data-player=""></td>
+       <td id="74" name="g4" data-peca="" data-player=""></td>
+       <td id="84" name="h4" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l3">
+       <td id="13" name="a3" data-peca="" data-player=""></td>
+       <td id="23" name="b3" data-peca="" data-player=""></td>
+       <td id="33" name="c3" data-peca="" data-player=""></td>
+       <td id="43" name="d3" data-peca="" data-player=""></td>
+       <td id="53" name="e3" data-peca="" data-player=""></td>
+       <td id="63" name="f3" data-peca="" data-player=""></td>
+       <td id="73" name="g3" data-peca="" data-player=""></td>
+       <td id="83" name="h3" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l2">
+       <td id="12" name="a2" data-peca="" data-player=""></td>
+       <td id="22" name="b2" data-peca="" data-player=""></td>
+       <td id="32" name="c2" data-peca="" data-player=""></td>
+       <td id="42" name="d2" data-peca="" data-player=""></td>
+       <td id="52" name="e2" data-peca="" data-player=""></td>
+       <td id="62" name="f2" data-peca="" data-player=""></td>
+       <td id="72" name="g2" data-peca="" data-player=""></td>
+       <td id="82" name="h2" data-peca="" data-player=""></td>
+     </tr>
+     <tr id="l1">
+       <td id="11" name="a1" data-peca="" data-player=""></td>
+       <td id="21" name="b1" data-peca="" data-player=""></td>
+       <td id="31" name="c1" data-peca="" data-player=""></td>
+       <td id="41" name="d1" data-peca="" data-player=""></td>
+       <td id="51" name="e1" data-peca="" data-player=""></td>
+       <td id="61" name="f1" data-peca="" data-player=""></td>
+       <td id="71" name="g1" data-peca="" data-player=""></td>
+       <td id="81" name="h1" data-peca="" data-player=""></td>
+     </tr>
+    </table>
+  </div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js'></script>
+      <script id="rendered-js" >
+(function ($) {
+  var modelArmy = { rook: 2, knight: 2, bishop: 2, queen: 1, king: 1, pawn: 8 };
+  var modelGame = { status: 0, winner: '', turn: 'white', player1: 'white', player2: 'black' };
+  var game = '',blackArmy = '',whiteArmy = '';
+
+
+  function newGame() {
+    blackArmy = modelArmy;
+    whiteArmy = modelArmy;
+    game = modelGame;
+    $(".chessboard td").attr("class", '');
+    $("#l8 td,#l7 td").addClass(game.player2).attr("data-player", 2);
+    $("#l1 td,#l2 td").addClass(game.player1).attr("data-player", 1);
+    $("#l2 td, #l7 td").addClass("pawn").attr("data-peca", "pawn");
+    $("#18, #88, #11, #81").addClass("rook").attr("data-peca", "rook");
+    $("#28, #78, #21, #71").addClass("knight").attr("data-peca", "knight");
+    $("#38, #68, #31, #61").addClass("bishop").attr("data-peca", "bishop");
+    $("#48, #41").addClass("queen").attr("data-peca", "queen");
+    $("#58, #51").addClass("king").attr("data-peca", "king");
+    showTurn();
+  };
+  function checkMove(id) {
+    var el = $("#" + id);
+    if (el.hasClass(game.turn)) {
+      $('.' + game.turn).removeClass("selected");
+      el.addClass("selected");
+      $(".chessboard td").removeClass('available');
+      var pMoves = moves[el.attr('data-peca')](id, el.data('player'));
+      $.each(pMoves, function () {
+        $("#" + this).addClass('available');
+      });
+    }
+
+  };
+  function goTo(idFrom, idTo) {
+    var from = $("#" + idFrom);
+    var to = $("#" + idTo);
+    to.attr("data-peca", from.attr('data-peca')).attr('data-player', from.attr("data-player")).attr("class", from.attr("class"));
+
+    from.attr("data-peca", "").attr("data-player", "").attr("class", "");
+    $(".chessboard td").removeClass("available").removeClass("selected");
+    game.turn = game.turn === 'white' ? 'black' : 'white';
+    showTurn();
+  }
+  function showTurn() {
+    if (game.turn === 'white') {
+      $("#turn").removeClass('turnBlack').addClass('turnWhite');
+    } else {
+      $("#turn").removeClass('turnWhite').addClass('turnBlack');
+    }
+  }
+  var moves = {
+    bishop: function (coord, player) {
+      var column = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var coordinates = [];
+      var turn = game.turn;
+
+      coordinates = this.coordsD(column, line, 8, player);
+
+      return coordinates;
+    },
+    king: function (coord, player) {
+      var column = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var coordinates = [];
+      var turn = game.turn;
+
+      var l = Number(line) + 2;
+      var coordinatesV = this.coordsV(column, line, 1, player);
+      var coordinatesH = this.coordsH(column, line, 1, player);
+      var coordinatesD = this.coordsD(column, line, 1, player);
+      coordinates = coordinatesV.concat(coordinatesH);
+      coordinates = coordinates.concat(coordinatesD);
+      return coordinates;
+    },
+    knight: function (coord, player) {
+      var col = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var turn = game.turn;
+      var c1 = col + 1,l1 = line + 2,c2 = col - 1,c3 = col + 2,l3 = line + 1,l4 = line - 1,l5 = line - 2,c4 = col - 2;
+      coordinatesT = [c1 + '' + l1, c2 + '' + l1, c3 + '' + l3, c3 + '' + l4, c1 + '' + l5, c2 + '' + l5, c4 + '' + l3, c4 + '' + l4];
+      coordinates = [];
+      $.each(coordinatesT, function () {
+        var tEl = $("#" + this);
+        if (player !== Number(tEl.attr('data-player'))) {
+          coordinates.push(this);
+        }
+      });
+      return coordinates;
+    },
+    pawn: function (coord, player) {
+      var column = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var coordinates = [];
+      var turn = game.turn;
+      if (player === 1) {
+        if (line === 2) {
+          var l = Number(line) + 2;
+          coordinates = this.coordsVP(column, line, l, false);
+        } else {
+          var l = Number(line) + 1;
+          coordinates = this.coordsVP(column, line, l, false);
+        }
+        var prevCol = column - 1;
+        var nextCol = Number(column) + 1;
+        var nextLine = line + 1;
+        if ($("#" + prevCol + nextLine).attr("data-peca") !== '' && Number($("#" + prevCol + nextLine).attr("data-player")) !== player) {
+          coordinates.push(prevCol + '' + nextLine);
+        }
+        if ($("#" + nextCol + nextLine).attr("data-peca") !== '' && Number($("#" + nextCol + nextLine).attr("data-player")) !== player) {
+          coordinates.push(nextCol + '' + nextLine);
+        }
+      } else {
+        if (Number(line) === 7) {
+          var l = Number(line) - 2;
+          coordinates = this.coordsVP(column, line, l, false);
+        } else {
+          var l = Number(line) - 1;
+          coordinates = this.coordsVP(column, line, l, false);
+        }
+        var prevCol = column - 1;
+        var nextCol = Number(column) + 1;
+        var nextLine = line - 1;
+        if ($("#" + prevCol + nextLine).attr("data-peca") !== '' && $("#" + prevCol + nextLine).attr("data-player") !== player) {
+          coordinates.push(prevCol + '' + nextLine);
+        }
+        if ($("#" + nextCol + nextLine).attr("data-peca") !== '' && $("#" + nextCol + nextLine).attr("data-player") !== player) {
+          coordinates.push(nextCol + '' + nextLine);
+        }
+      }
+      return coordinates;
+    },
+    queen: function (coord, player) {
+      var column = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var coordinates = [];
+      var turn = game.turn;
+
+      var l = Number(line) + 2;
+      var coordinatesV = this.coordsV(column, line, 8, player);
+      var coordinatesH = this.coordsH(column, line, 8, player);
+      var coordinatesD = this.coordsD(column, line, 8, player);
+      coordinates = coordinatesV.concat(coordinatesH);
+      coordinates = coordinates.concat(coordinatesD);
+      return coordinates;
+    },
+    rook: function (coord, player) {
+      var column = Number(coord.charAt(0));
+      var line = Number(coord.charAt(1));
+      var coordinates = [];
+      var turn = game.turn;
+
+      var l = Number(line) + 2;
+      var coordinatesV = this.coordsV(column, line, 8, player);
+      var coordinatesH = this.coordsH(column, line, 8, player);
+      coordinates = coordinatesV.concat(coordinatesH);
+      return coordinates;
+    },
+    coordsVP: function (col, lineStart, lineEnd, eatVertical) {
+      var l1 = lineStart < lineEnd ? lineStart + 1 : lineEnd;
+      var l2 = lineStart > lineEnd ? lineStart : lineEnd;
+      var iniPlayer = $("#" + col + lineStart).attr("data-player");
+      var coords = [];
+      for (i = l1; i <= l2; i++) {if (window.CP.shouldStopExecution(0)) break;
+        var idCoord = col + '' + i;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (iniPlayer !== tEl.attr('data-player') && eatVertical !== false) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+
+      }window.CP.exitedLoop(0);
+      return coords;
+    },
+    coordsD: function (col, line, n, player) {
+      var min = col - n > 1 ? col - n : 1;
+      var max = col + n < 8 ? col + n : 8;
+      var coords = [];
+      var l2 = line + 1;
+      for (i = col + 1; i <= max; i++) {if (window.CP.shouldStopExecution(1)) break;
+        var idCoord = i + '' + l2;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+        l2++;
+      }window.CP.exitedLoop(1);
+      l2 = line - 1;
+      for (i = col + 1; i <= max; i++) {if (window.CP.shouldStopExecution(2)) break;
+        var idCoord = i + '' + l2;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+        l2--;
+      }window.CP.exitedLoop(2);
+      l2 = line - 1;
+      for (i = col - 1; i >= min; i--) {if (window.CP.shouldStopExecution(3)) break;
+        var idCoord = i + '' + l2;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+        l2--;
+      }window.CP.exitedLoop(3);
+      l2 = line + 1;
+      for (i = col - 1; i >= min; i--) {if (window.CP.shouldStopExecution(4)) break;
+        var idCoord = i + '' + l2;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+        l2++;
+      }window.CP.exitedLoop(4);
+      return coords;
+    },
+    coordsH: function (col, line, n, player) {
+      var min = col - n > 1 ? col - n : 1;
+      var max = col + n < 8 ? col + n : 8;
+      var coords = [];
+      for (i = col + 1; i <= max; i++) {if (window.CP.shouldStopExecution(5)) break;
+        var idCoord = i + '' + line;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+      }window.CP.exitedLoop(5);
+      for (i = col - 1; i >= min; i--) {if (window.CP.shouldStopExecution(6)) break;
+        var idCoord = i + '' + line;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+      }window.CP.exitedLoop(6);
+      return coords;
+    },
+    coordsV: function (col, line, n, player) {
+      var min = line - n > 1 ? line - n : 1;
+      var max = line + n < 8 ? line + n : 8;
+      var coords = [];
+      for (i = line + 1; i <= max; i++) {if (window.CP.shouldStopExecution(7)) break;
+        var idCoord = col + '' + i;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+      }window.CP.exitedLoop(7);
+      for (i = line - 1; i >= min; i--) {if (window.CP.shouldStopExecution(8)) break;
+        var idCoord = col + '' + i;
+        var tEl = $("#" + idCoord);
+        if (tEl.attr('data-peca') === '') {
+          coords.push(idCoord);
+        } else {
+          if (player !== Number(tEl.attr('data-player'))) {
+            coords.push(idCoord);
+          }
+          break;
+        }
+      }window.CP.exitedLoop(8);
+      return coords;
+    } };
+
+  $("body").ready(function () {
+    newGame();
+    $(".chessboard td").on("click", function () {
+      if (!$(this).hasClass("available")) {
+        checkMove($(this).attr("id"));
+      } else {
+        goTo($(".selected").attr('id'), $(this).attr('id'));
+      }
+    });
+  });
+})(jQuery);
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
